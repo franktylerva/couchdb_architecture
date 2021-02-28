@@ -1,0 +1,24 @@
+spring:
+  security:
+    user:
+      password: password
+  cloud:
+    gateway:
+      default-filters:
+        - AddRequestHeader=Access-Control-Allow-Origin, *
+        - StripPrefix=1
+      routes:
+        - id: couchdb
+          uri: http://localhost:5984
+          predicates:
+            - Path=/couchdb/**
+          filters:
+            - AddCouchDBAuthHeaders=92de07df7e7a3fe14808cef90a7cc0d91
+        - id: app
+          uri: http://localhost:5000
+          predicates:
+            - Path=/app/**
+
+logging:
+  level:
+    com.example.apigateway: DEBUG
