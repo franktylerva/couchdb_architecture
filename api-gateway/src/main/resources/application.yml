@@ -9,16 +9,19 @@ spring:
         - StripPrefix=1
       routes:
         - id: couchdb
-          uri: http://localhost:5984
+          uri: http://couchdb:5984
           predicates:
             - Path=/couchdb/**
           filters:
             - AddCouchDBAuthHeaders=92de07df7e7a3fe14808cef90a7cc0d91
         - id: app
-          uri: http://localhost:5000
+          uri: http://data-app
           predicates:
             - Path=/app/**
+          filters:
+            - AddCouchDBAuthHeaders=92de07df7e7a3fe14808cef90a7cc0d91
 
 logging:
   level:
+    root: DEBUG
     com.example.apigateway: DEBUG

@@ -5,16 +5,26 @@ import App from './App';
 import PouchDB from 'pouchdb-browser';
 import { Provider } from 'use-pouchdb';
 
-var pouchOpts = {
-  skip_setup: true,
-  auth: {
-      username: 'admin',
-      password: 'secret'
+// var pouchOpts = {
+//   skip_setup: true,
+//   auth: {
+//       username: 'admin',
+//       password: 'secret'
+//   }
+// };
+
+
+const createSession = async () => await fetch("http://localhost:8080/couchdb/_session", {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
   }
-};
+});
+
+createSession();
 
 const db = new PouchDB('desserts');
-const remoteDatabase = new PouchDB("http://localhost:5984/desserts", pouchOpts);
+const remoteDatabase = new PouchDB("http://localhost:8080/couchdb/desserts");
 
 PouchDB.sync(db, remoteDatabase, {
   live: true,

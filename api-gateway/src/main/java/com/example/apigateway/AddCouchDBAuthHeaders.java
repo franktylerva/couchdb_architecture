@@ -31,7 +31,7 @@ public class AddCouchDBAuthHeaders extends AbstractGatewayFilterFactory<AddCouch
                 return exchange.getPrincipal()
                         .map(p -> exchange.getRequest().mutate()
                                 .header("X-Auth-CouchDB-UserName", p.getName())
-                                .header("X-Auth-CouchDB-Roles", "admin,blogger")
+                                .header("X-Auth-CouchDB-Roles", "_admin,blogger")
                                 .header("X-Auth-CouchDB-Token", getKey(p.getName(), config.getSigningKey()))
                                 .build())
                         .map(request -> exchange.mutate().request(request).build())
