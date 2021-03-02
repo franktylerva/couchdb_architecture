@@ -9,6 +9,9 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import { Grid } from '@material-ui/core';
 import Fab from '@material-ui/core/Fab';
+import IconButton from '@material-ui/core/IconButton';
+import DeleteRoundedIcon from '@material-ui/icons/DeleteRounded';
+import EditRounded from '@material-ui/icons/EditRounded';
 import AddIcon from '@material-ui/icons/Add';
 import AddDessertForm from './AddDessertForm';
 import { useAllDocs } from 'use-pouchdb';
@@ -43,6 +46,14 @@ export default function DenseTable(props) {
     setOpen(false);
   };
 
+  const handleDelete = () => {
+    alert('Delete!');
+  }
+
+  const handleEdit = () => {
+    setOpen(true);
+  }
+
   return (
 
     <Grid>
@@ -62,18 +73,30 @@ export default function DenseTable(props) {
                             <TableCell align="right">Fat&nbsp;(g)</TableCell>
                             <TableCell align="right">Carbs&nbsp;(g)</TableCell>
                             <TableCell align="right">Protein&nbsp;(g)</TableCell>
+                            <TableCell align="right">&nbsp;(g)</TableCell>
+                            <TableCell align="right">&nbsp;(g)</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
                     {desserts.map((row) => (
                         <TableRow key={row.doc._id}>
-                        <TableCell component="th" scope="row">
-                            {row.doc.name}
-                        </TableCell>
-                        <TableCell align="right">{row.doc.calories}</TableCell>
-                        <TableCell align="right">{row.doc.fat}</TableCell>
-                        <TableCell align="right">{row.doc.carbs}</TableCell>
-                        <TableCell align="right">{row.doc.protein}</TableCell>
+                          <TableCell component="th" scope="row">
+                              {row.doc.name}
+                          </TableCell>
+                          <TableCell align="right">{row.doc.calories}</TableCell>
+                          <TableCell align="right">{row.doc.fat}</TableCell>
+                          <TableCell align="right">{row.doc.carbs}</TableCell>
+                          <TableCell align="right">{row.doc.protein}</TableCell>
+                          <TableCell align="center">
+                            <IconButton>
+                              <DeleteRoundedIcon fontSize="small" color="secondary" onClick={handleDelete}/>
+                            </IconButton>
+                          </TableCell>
+                          <TableCell align="center">
+                            <IconButton>
+                              <EditRounded fontSize="small" color="primary" onClick={handleEdit}/>
+                            </IconButton>
+                          </TableCell>
                         </TableRow>
                     ))}
                     </TableBody>
