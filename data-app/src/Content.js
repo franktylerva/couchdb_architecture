@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -15,7 +15,7 @@ import EditRounded from '@material-ui/icons/EditRounded';
 import AddIcon from '@material-ui/icons/Add';
 import AddDessertForm from './AddDessertForm';
 import { useAllDocs } from 'use-pouchdb';
-
+import { usePouch } from 'use-pouchdb';
 
 const useStyles = makeStyles({
   table: {
@@ -31,7 +31,12 @@ const useStyles = makeStyles({
 export default function DenseTable(props) {
   const classes = useStyles();
 
-  const [open, setOpen] = React.useState(false);
+  const db = usePouch();
+
+  const defaultValues = { name: '', calories: 0, fat: 0, carbs: 0, protein: 0 };
+  const [currentDoc,setCurrentDoc] = useState(defaultValues);
+
+  const [open, setOpen] = useState(false);
 
   const { rows: desserts } = useAllDocs({
     include_docs: true, // Load all document bodies
@@ -42,16 +47,24 @@ export default function DenseTable(props) {
   };
 
   const handleClose = () => {
-    console.log(desserts);
+    setCurrentDoc(defaultValues);
     setOpen(false);
   };
 
-  const handleDelete = () => {
-    alert('Delete!');
-  }
+  const handleEdit = async (id) => {
 
-  const handleEdit = () => {
-    setOpen(true);
+    try {
+      const doc = await db.get(id);
+      setCurrentDoc(doc);
+      setOpen(true);
+    }
+    catch(err) {
+      console.err(err);
+    }
+  };
+
+  const handleDelete = async (id,rev) => {
+    await db.put({"_deleted": true, "_id": id, "_rev": rev});
   }
 
   return (
@@ -60,7 +73,7 @@ export default function DenseTable(props) {
         <Grid item xs={12} className={classes.headerBar}>
             <Fab size="small" color="primary" aria-label="add">
                 <AddIcon onClick={handleClickOpen} />
-                <AddDessertForm open={open} onClose={handleClose} onAdd={props.add}/>
+                <AddDessertForm open={open} onClose={handleClose} onAdd={props.add} currentDoc={currentDoc}/>
             </Fab>
         </Grid>
         <Grid>
@@ -73,8 +86,7 @@ export default function DenseTable(props) {
                             <TableCell align="right">Fat&nbsp;(g)</TableCell>
                             <TableCell align="right">Carbs&nbsp;(g)</TableCell>
                             <TableCell align="right">Protein&nbsp;(g)</TableCell>
-                            <TableCell align="right">&nbsp;(g)</TableCell>
-                            <TableCell align="right">&nbsp;(g)</TableCell>
+                            <TableCell align="center">Actions&nbsp;</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -87,14 +99,12 @@ export default function DenseTable(props) {
                           <TableCell align="right">{row.doc.fat}</TableCell>
                           <TableCell align="right">{row.doc.carbs}</TableCell>
                           <TableCell align="right">{row.doc.protein}</TableCell>
-                          <TableCell align="center">
-                            <IconButton>
-                              <DeleteRoundedIcon fontSize="small" color="secondary" onClick={handleDelete}/>
+                          <TableCell align="right" width={88}>
+                            <IconButton onClick={() => handleDelete(row.doc._id,row.doc._rev)}>
+                              <DeleteRoundedIcon fontSize="small" color="secondary"/>
                             </IconButton>
-                          </TableCell>
-                          <TableCell align="center">
-                            <IconButton>
-                              <EditRounded fontSize="small" color="primary" onClick={handleEdit}/>
+                            <IconButton onClick={() => handleEdit(row.doc._id)}>
+                              <EditRounded fontSize="small" color="primary"/>
                             </IconButton>
                           </TableCell>
                         </TableRow>

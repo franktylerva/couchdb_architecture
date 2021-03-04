@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState,useEffect} from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -9,22 +9,35 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import { usePouch } from 'use-pouchdb';
 
 export default function FormDialog(props) {
-  const initialFormState = { name: '', calories: 0, fat: 0, carbs: 0, protein: 0 }
-  const [dessert, setDessert] = useState(initialFormState)
+  
+  const [dessert, setDessert] = useState(props.currentDoc)
   const db = usePouch()
+
+  useEffect(() => {
+    if(props.currentDoc) {
+      setDessert(props.currentDoc);
+    }
+  },[props.currentDoc])
 
   const handleInputChange = (event) => {
     const { name, value } = event.target
     setDessert({ ...dessert, [name]: value })
   }
 
-  const addDessert = async () => {
-    await db.post(dessert);
+  const saveDessert = async () => {
+
+    if(dessert._id) {
+      await db.put(dessert);
+    }
+    else {
+      await db.post(dessert);
+    }
     props.onClose();
   }
 
   return (
     <div>
+      <h1>{props.currentDocId}</h1>
       <Dialog open={props.open} aria-labelledby="form-dialog-title" maxWidth="xs">
         <DialogTitle id="form-dialog-title">Add Dessert</DialogTitle>
         <DialogContent>
@@ -38,6 +51,7 @@ export default function FormDialog(props) {
             name="name" 
             label="Dessert Name"
             type="text"
+            value={dessert.name}
             fullWidth
             onChange={handleInputChange}
           />
@@ -47,6 +61,7 @@ export default function FormDialog(props) {
             name="calories" 
             label="calories"
             type="text"
+            value={dessert.calories}
             fullWidth 
             onChange={handleInputChange}
           />
@@ -56,6 +71,7 @@ export default function FormDialog(props) {
             name="fat" 
             label="Fat"
             type="text"
+            value={dessert.fat}
             fullWidth 
             onChange={handleInputChange}
           />
@@ -65,6 +81,7 @@ export default function FormDialog(props) {
             name="carbs" 
             label="Carbs"
             type="text"
+            value={dessert.carbs}
             fullWidth 
             onChange={handleInputChange}
           />
@@ -74,6 +91,7 @@ export default function FormDialog(props) {
             name="protein" 
             label="Protein"
             type="text"
+            value={dessert.protein}
             fullWidth 
             onChange={handleInputChange}
           />
@@ -82,8 +100,8 @@ export default function FormDialog(props) {
           <Button onClick={props.onClose} color="primary">
             Cancel
           </Button>
-          <Button onClick={addDessert} color="primary">
-            Add
+          <Button onClick={saveDessert} color="primary">
+            Save
           </Button>
         </DialogActions>
       </Dialog>
