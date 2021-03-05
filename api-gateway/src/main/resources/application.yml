@@ -14,14 +14,16 @@ spring:
             - Path=/couchdb/**
           filters:
             - AddCouchDBAuthHeaders=92de07df7e7a3fe14808cef90a7cc0d91
+            - SetUserCookie
         - id: app
           uri: http://data-app
           predicates:
             - Path=/app/**
           filters:
             - AddCouchDBAuthHeaders=92de07df7e7a3fe14808cef90a7cc0d91
+            - SetUserCookie
 
 logging:
   level:
-    root: DEBUG
+    root: ERROR
     com.example.apigateway: DEBUG

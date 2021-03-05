@@ -32,7 +32,7 @@ public class AddCouchDBAuthHeaders extends AbstractGatewayFilterFactory<AddCouch
                         .map(p -> exchange.getRequest().mutate()
                                 .header("X-Auth-CouchDB-UserName", p.getName())
                                 .header("X-Auth-CouchDB-Roles", "_admin,blogger")
-                                .header("X-Auth-CouchDB-Token", getKey(p.getName(), config.getSigningKey()))
+                                .header("X-Auth-CouchDB-Token", encodeHmacSHA1(p.getName(), config.getSigningKey()))
                                 .build())
                         .map(request -> exchange.mutate().request(request).build())
                         .defaultIfEmpty(exchange).flatMap(chain::filter);
@@ -65,7 +65,14 @@ public class AddCouchDBAuthHeaders extends AbstractGatewayFilterFactory<AddCouch
         }
     }
 
-    private static String getKey( String username, String signingKey ) {
+    /**
+     * Encode a string using a signing key using the HMACSHA1 algorithm.
+     * 
+     * @param username
+     * @param signingKey
+     * @return
+     */
+    private static String encodeHmacSHA1( String username, String signingKey ) {
 
         try {
             //String signingKey = "92de07df7e7a3fe14808cef90a7cc0d91";

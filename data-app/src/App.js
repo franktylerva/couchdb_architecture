@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import { Grid } from '@material-ui/core';
 import Header from "./Header"
 import DenseTable from "./Content"
+import cookie from 'react-cookies'
 
 function createData(name, calories, fat, carbs, protein) {
   return { name, calories, fat, carbs, protein };
@@ -19,6 +20,8 @@ function App() {
 
   const [data, setData] = useState(rows);
 
+  const user = cookie.load("USER-DATA");
+
   const addDessert = (dessert) => {
     setData([...data, dessert]);
   }
@@ -27,7 +30,7 @@ function App() {
   return (
     <Grid container direction="column">
       <Grid item>
-        <Header/>
+        <Header user={user}/>
       </Grid>
       <Grid item container>
         <Grid item sm={2}/>
