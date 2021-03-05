@@ -13,7 +13,8 @@ import IconButton from '@material-ui/core/IconButton';
 import DeleteRoundedIcon from '@material-ui/icons/DeleteRounded';
 import EditRounded from '@material-ui/icons/EditRounded';
 import AddIcon from '@material-ui/icons/Add';
-import AddDessertForm from './AddDessertForm';
+import DessertDrawer from './DessertDrawer';
+//import Drawer from '@material-ui/core/Drawer';
 import { useAllDocs } from 'use-pouchdb';
 import { usePouch } from 'use-pouchdb';
 
@@ -73,7 +74,8 @@ export default function DenseTable(props) {
         <Grid item xs={12} className={classes.headerBar}>
             <Fab size="small" color="primary" aria-label="add">
                 <AddIcon onClick={handleClickOpen} />
-                <AddDessertForm open={open} onClose={handleClose} onAdd={props.add} currentDoc={currentDoc}/>
+                {/* <AddDessertForm open={open} onClose={handleClose} onAdd={props.add} currentDoc={currentDoc}/> */}
+                <DessertDrawer open={open} onClose={handleClose} currentDoc={currentDoc}/>
             </Fab>
         </Grid>
         <Grid>
@@ -112,7 +114,7 @@ export default function DenseTable(props) {
                     </TableBody>
                 </Table>
             </TableContainer>
-            </Grid>
+          </Grid>
     </Grid>
   );
 }
