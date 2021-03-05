@@ -1,10 +1,40 @@
 version: '2'
 services:
+  postgres:
+      image: postgres
+      volumes:
+        - postgres_data:/var/lib/postgresql/data
+      environment:
+        POSTGRES_DB: keycloak
+        POSTGRES_USER: keycloak
+        POSTGRES_PASSWORD: password
+  keycloak:
+      image: quay.io/keycloak/keycloak:latest
+      command: ["-Djboss.socket.binding.port-offset=1"]
+      hostname: keycloak
+      environment:
+        DB_VENDOR: POSTGRES
+        DB_ADDR: postgres
+        DB_DATABASE: keycloak
+        DB_USER: keycloak
+        DB_SCHEMA: public
+        DB_PASSWORD: password
+        KEYCLOAK_USER: admin
+        KEYCLOAK_PASSWORD: password
+        # Uncomment the line below if you want to specify JDBC parameters. The parameter below is just an example, and it shouldn't be used in production without knowledge. It is highly recommended that you read the PostgreSQL JDBC driver documentation in order to use it.
+        #JDBC_PARAMS: "ssl=true"
+      ports:
+        - 8081:8081
+      depends_on:
+        - postgres
   api-gateway:
     image: api-gateway:0.0.1-SNAPSHOT
     ports:
       - '8080:8080'
+    environment: 
+      AUTHDOMAIN: http://keycloak:8081/auth/realms/CouchDB
     depends_on:
+      - keycloak
       - data-app
       - couchdb
   data-app:
@@ -26,3 +56,5 @@ services:
 volumes:
   couchdb_data:
     driver: local
+  postgres_data:
+      driver: local
