@@ -20,7 +20,9 @@ function App() {
 
   const [data, setData] = useState(rows);
 
-  const user = cookie.load("USER-DATA");
+  const userCookie = cookie.load("USER-DATA");
+  
+  const user = JSON.parse(atob(userCookie));
 
   const addDessert = (dessert) => {
     setData([...data, dessert]);

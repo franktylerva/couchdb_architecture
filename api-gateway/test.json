@@ -1,0 +1,32 @@
+{
+    "at_hash": "NzpyANga4Uc_4nS5vhhUiw",
+    "sub": "e84f2bfc-ef81-4409-bd12-4bc51e3166ee",
+    "email_verified": false,
+    "iss": "http://keycloak:8081/auth/realms/CouchDB",
+    "typ": "ID",
+    "preferred_username": "ftyler",
+    "given_name": "Frank",
+    "nonce": "wcq3HoYvTyO9tSWnIm8ZWphbW0G6Dq291S_aVJRd3RY",
+    "aud": [
+        "api-gateway"
+    ],
+    "acr": "1",
+    "azp": "api-gateway",
+    "auth_time": {
+        "seconds": 1615055306,
+        "nanos": 0
+    },
+    "name": "Frank Tyler",
+    "exp": {
+        "seconds": 1615055607,
+        "nanos": 0
+    },
+    "session_state": "a2c4cdc9-b23a-4b42-b938-9c2356d30289",
+    "family_name": "Tyler",
+    "iat": {
+        "seconds": 1615055307,
+        "nanos": 0
+    },
+    "email": "franktylerva@gmail.com",
+    "jti": "d9377b9f-efe1-42fb-96e1-28c301479eba"
+}

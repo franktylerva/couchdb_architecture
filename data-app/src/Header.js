@@ -15,7 +15,7 @@ const Header = (props) => {
     return <AppBar position="static">
         <Toolbar>
             <Typography className={classes.typographyStyles} >PouchDB / CouchDB</Typography>
-            <Typography>{props.user}&nbsp;</Typography>
+            <Typography>{props.user.name}&nbsp;</Typography>
             <AcUnitRounded/>
         </Toolbar>
     </AppBar>
